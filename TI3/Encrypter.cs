@@ -1,19 +1,28 @@
-﻿public class ElGamal
+﻿public class Encrypter
 {
 	public int P { get; private set; }
 	public int G { get; private set; }
 	public int Y { get; private set; }
 	public int X { get; private set; }
 
-	public void GenerateKeys(int p, int g, int x)
+	private static int FastExp(int a, int z, int n)
 	{
-		if (x <= 1 || x >= p - 1)
-			throw new ArgumentException("Закрытый ключ x должен быть: 1 < x < p-1");
+		long a1 = a;
+		long z1 = z;
+		long x = 1;
 
-		P = p;
-		G = g;
-		X = x;
-		Y = FastExp(G, X, P);
+		while (z1 != 0)
+		{
+			while (z1 % 2 == 0)
+			{
+				z1 /= 2;
+				a1 = (a1 * a1) % n; //done
+			}
+			z1--;
+			x = (x * a1) % n;
+		}
+
+		return (int)x;
 	}
 
 	public (int a, int b) Encrypt(int m, int k)
@@ -31,7 +40,29 @@
 		int b = (FastExp(Y, k, P) * m) % P;
 		return (a, b);
 	}
+	//asm
+	public static int GCD(int a, int b)
+	{
+		while (b != 0)
+		{
+			int temp = b;
+			b = a % b;
+			a = temp;
+		}
+		return a;
+	}
 
+	public void GenerateKeys(int p, int g, int x)
+	{
+		if (x <= 1 || x >= p - 1)
+			throw new ArgumentException("Закрытый ключ x должен быть: 1 < x < p-1");
+
+		P = p;
+		G = g;
+		X = x;
+		Y = FastExp(G, X, P);
+	}
+	//допилить
 	public int Decrypt(int a, int b)
 	{
 		int ax = FastExp(a, X, P);
@@ -43,33 +74,6 @@
 		return decrypted;
 	}
 
-	private static int FastExp(int a, int z, int n)
-	{
-		long a1 = a;
-		long z1 = z;
-		long x = 1;
-
-		while (z1 != 0)
-		{
-			while (z1 % 2 == 0)
-			{
-				z1 /= 2;
-				a1 = (a1 * a1) % n;
-			}
-			z1--;
-			x = (x * a1) % n;
-		}
-
-		return (int)x;
-	}
-	public static int GCD(int a, int b)
-	{
-		while (b != 0)
-		{
-			int temp = b;
-			b = a % b;
-			a = temp;
-		}
-		return a;
-	}
+	
+	
 }

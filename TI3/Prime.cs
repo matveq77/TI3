@@ -1,4 +1,4 @@
-﻿public static class PrimeNumberGenerator
+﻿public static class Prime
 {
 	public static bool IsPrime(int n)
 	{
@@ -12,5 +12,5 @@
 			if (n % i == 0) return false;
 		}
 		return true;
-	}
+	} //perfectPrimeFinder is done
 }

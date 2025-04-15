@@ -2,7 +2,7 @@
 {
     public partial class MainForm : Form
     {
-        private ElGamal elGamal;
+        private Encrypter elGamal;
         private List<int> primitiveRoots;
         private string inputFilePath;
         private byte[] inputFileBytes;
@@ -15,7 +15,7 @@
         public MainForm()
         {
             InitializeComponent();
-            elGamal = new ElGamal();
+            elGamal = new Encrypter();
         }
 
         private void txtPrimeP_TextChanged(object sender, EventArgs e)
@@ -25,7 +25,7 @@
 
             if (int.TryParse(txtPrimeP.Text, out int p))
             {
-                bool isPrime = PrimeNumberGenerator.IsPrime(p);
+                bool isPrime = Prime.IsPrime(p);
                 lblPrimeStatus.Text = isPrime ? $"{p} - простое число" : $"{p} - не является простым числом";
                 lblPrimeStatus.ForeColor = isPrime ? Color.Green : Color.Red;
                 btnFindPrimitiveRoots.Enabled = isPrime;
@@ -42,7 +42,7 @@
             if (int.TryParse(txtPrimeP.Text, out int p))
             {
                 lstPrimitiveRoots.Items.Clear();
-                primitiveRoots = PrimitiveRootFinder.FindPrimitiveRoots(p);
+                primitiveRoots = Roots.FindPrimitiveRoots(p);
                 lblRoots.Text = "Кол-во корней: " + primitiveRoots.Count.ToString();
                 if (primitiveRoots.Count > 0)
                 {
